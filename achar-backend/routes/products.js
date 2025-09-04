@@ -1,10 +1,19 @@
 const express = require('express');
 const Product = require('../models/Product');
-const { auth, admin } = require('../middleware/authMiddleware'); // <-- Add this line
+const { auth, admin } = require('../middleware/authMiddleware');
 const router = express.Router();
 
+// ✅ Get all products → GET /api/products
+router.get('/', async (req, res) => {
+  try {
+    const products = await Product.find();
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
 
-// Get a single product by ID
+// ✅ Get single product → GET /api/products/:id
 router.get('/:id', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -18,19 +27,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-
-// Get all products
-router.get('/', async (req, res) => {
-  try {
-    const products = await Product.find();
-    res.json(products);
-  } catch (err) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Add a new product (admin only)
-router.post('/', auth, admin, async (req, res) => { // <-- Protect this route
+// ✅ Add a new product (admin only) → POST /api/products
+router.post('/', auth, admin, async (req, res) => {
   try {
     const { name, description, price, image, stock } = req.body;
     const product = new Product({ name, description, price, image, stock });
