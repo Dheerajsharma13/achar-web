@@ -24,7 +24,7 @@ router.get('/:id', async (req, res) => {
   } catch (err) {
     console.error("Error fetching product by ID:", err.message);
     res.status(500).json({ message: 'Server error' });
-  }
+  };
 });
 
 // ✅ Add a new product (admin only) → POST /api/products
